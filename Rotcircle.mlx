@@ -1,0 +1,72 @@
+clear;
+clc;
+close all;
+
+
+%Make Circle
+center=[0 1];  
+n_circle_p = 40;
+theta_c = 0:2*pi/(n_circle_p-1):2*pi;
+    %First Circle
+    p_circle = zeros(n_circle_p, 3);
+    r = 1;
+    for i = 1:n_circle_p
+        p_circle(i,:) = [r*cos(theta_c(i))+center(1), r*sin(theta_c(i))+center(2), 0];
+    end
+    %First Circle
+    s_circle = zeros(n_circle_p, 3);
+    r = 0.8;
+    for i = 1:n_circle_p
+        s_circle(i,:) = [r*cos(theta_c(i))+center(1), r*sin(theta_c(i))+center(2), 0];
+    end
+
+%Rotate resolution(deg 0 to deg PI)
+N = size(p_circle,1);
+N_sample = 20;
+theta = 0:2*pi/(N_sample-1):2*pi;
+
+%Rotate resolution(deg 0 to deg PI)
+cLINE_L = 40;
+cLINE   = zeros(cLINE_L, 3); 
+cLINE(:,1) = transpose(linspace(1.5,-1.5,40));
+
+
+while true
+    for j = 1:N_sample
+        p_circle2 = zeros(size(p_circle));
+        s_circle2 = zeros(size(s_circle));
+        for i = 1:N
+            p_circle2(i,:) = (rotx(theta(j))*p_circle(i,:)')';
+            s_circle2(i,:) = (rotx(theta(j))*s_circle(i,:)')';
+        end
+        redstart = 1;
+        redend   = 20;
+        kstart = 21;
+        kend   = 40;
+        lim_min = -5;
+        lim_max = 5;
+        
+        line(p_circle2(:,1),p_circle2(:,2),p_circle2(:,3));
+        line(s_circle2(:,1),s_circle2(:,2),s_circle2(:,3));
+        line(p_circle2(redstart:redend,1),p_circle2(redstart:redend,2),p_circle2(redstart:redend,3), 'Color', 'r');
+        line(p_circle2(kstart:kend,1),p_circle2(kstart:kend,2),p_circle2(kstart:kend,3), 'Color', 'k');
+        line(cLINE(:,1),cLINE(:,2),cLINE(:,3))
+        
+        grid on;
+        xlim([lim_min, lim_max]);
+        ylim([lim_min, lim_max]);
+        zlim([lim_min, lim_max]);
+        xlabel('x');
+        ylabel('y');
+        zlabel('z');
+        view([45, 45]);
+        
+        drawnow  % display updates
+    
+        pause(0.1);
+%         if j ~= N_sample
+                cla reset;
+%         end
+    end
+end
+
